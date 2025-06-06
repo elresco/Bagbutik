@@ -9,12 +9,12 @@ import Foundation
  <https://developer.apple.com/documentation/appstoreconnectapi/buildicon>
  */
 public struct BuildIcon: Codable, Sendable, Identifiable {
-    public let id: String
+    public let id: String?
     public var links: ResourceLinks?
     public var type: String { "buildIcons" }
     public var attributes: Attributes?
 
-    public init(id: String,
+    public init(id: String? = nil,
                 links: ResourceLinks? = nil,
                 attributes: Attributes? = nil)
     {
@@ -25,7 +25,7 @@ public struct BuildIcon: Codable, Sendable, Identifiable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: AnyCodingKey.self)
-        id = try container.decode(String.self, forKey: "id")
+        id = try container.decodeIfPresent(String.self, forKey: "id")
         links = try container.decodeIfPresent(ResourceLinks.self, forKey: "links")
         attributes = try container.decodeIfPresent(Attributes.self, forKey: "attributes")
         if try container.decode(String.self, forKey: "type") != type {

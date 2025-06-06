@@ -111,10 +111,10 @@ public struct BuildResponse: Codable, Sendable {
     }
 
     public func getIcons() -> [BuildIcon] {
-        guard let iconIds = data.relationships?.icons?.data?.map(\.id),
+        guard let iconIds = data.relationships?.icons?.data?.compactMap(\.id),
               let icons = included?.compactMap({ relationship -> BuildIcon? in
-                  guard case let .buildIcon(icon) = relationship else { return nil }
-                  return iconIds.contains(icon.id) ? icon : nil
+                  guard case let .buildIcon(icon) = relationship, let id = icon.id, iconIds.contains(id) else { return nil }
+                  return icon
               })
         else {
             return []
